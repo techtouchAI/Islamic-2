@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "767034608401",
+    "firebase_url": "https://kinan-1988.firebaseio.com",
+    "project_id": "kinan-1988",
+    "storage_bucket": "kinan-1988.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767034608401:android:b3fe1183cb49477f805ab0",
+        "android_client_info": {
+          "package_name": "com.islamic.aldhakereen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5FK-3ZlDVsbNgeEjSMrAC0aUdnQzp7hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

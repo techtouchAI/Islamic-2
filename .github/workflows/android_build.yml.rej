@@ -1,0 +1,11 @@
+--- android_build.yml
++++ android_build.yml
+@@ -34,7 +34,7 @@
+         run: flutter pub get
+
+       - name: Build APK (64-bit architecture)
+-        run: flutter build apk --release
++        run: flutter build apk --release
+         env: # <--- هذه هي الإضافة التي نسيتها في رسالتك
+           KEYSTORE_STOREPASS: ${{ secrets.KEYSTORE_STOREPASS }}
+           KEYSTORE_KEYPASS: ${{ secrets.KEYSTORE_KEYPASS }}

@@ -1,0 +1,33 @@
+# Flutter-related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# Android-related
+android/**/generated/
+android/app/google-services.json
+android/local.properties
+android/key.properties
+android/app/*.keystore
+android/app/*.jks
+android/*.apk
+android/*.aab
+
+# iOS-related
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/ServiceDefinitions.json
+ios/Runner/GoogleService-Info.plist
+
+# Web-related
+
+# General
+.DS_Store
+.history
+.idea/
+.vscode/
+*.log

@@ -1,0 +1,1613 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الذاكرين - لوحة التحكم الاحترافية الشاملة</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --gold: #d4af37;
+        --dark: #1a252f;
+        --light-gold: #fcf8e3;
+      }
+      body {
+        font-family: "Noto Kufi Arabic", sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        overflow-x: hidden;
+      }
+      .sidebar {
+        background: var(--dark);
+        color: white;
+        min-height: 100vh;
+        position: sticky;
+        top: 0;
+        transition: 0.3s;
+        z-index: 2000;
+      }
+      .nav-link {
+        color: #cbd5e0;
+        margin-bottom: 5px;
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: 0.2s;
+      }
+      .nav-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+      .nav-link.active {
+        background: var(--gold);
+        color: black;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+      }
+      .main-content {
+        padding: 30px;
+        min-width: 0;
+      }
+      .card-lux {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        background: white;
+        transition: 0.3s;
+      }
+      .btn-gold {
+        background: var(--gold);
+        color: black;
+        font-weight: bold;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 25px;
+        transition: 0.3s;
+      }
+      .btn-gold:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        background: #c5a02c;
+      }
+      .action-bar {
+        background: white;
+        padding: 20px;
+        border-radius: 18px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+      }
+      .img-preview {
+        width: 80px;
+        height: 80px;
+        border-radius: 15px;
+        object-fit: cover;
+        border: 2px solid var(--gold);
+        background: #eee;
+      }
+      .upload-card {
+        border: 2px dashed #ddd;
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+        background: #fafafa;
+      }
+      .upload-card:hover {
+        border-color: var(--gold);
+        background: var(--light-gold);
+      }
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1999;
+        backdrop-filter: blur(2px);
+      }
+      .sidebar-overlay.show {
+        display: block;
+      }
+      @media (max-width: 991.98px) {
+        .sidebar {
+          position: fixed;
+          right: -280px;
+          width: 280px;
+          height: 100%;
+        }
+        .sidebar.show {
+          right: 0;
+        }
+        .mobile-toggle {
+          display: block !important;
+          position: fixed;
+          bottom: 25px;
+          left: 25px;
+          z-index: 2001;
+        }
+        .main-content {
+          padding: 15px;
+        }
+        .action-bar {
+          flex-direction: column;
+          align-items: stretch !important;
+        }
+        .btn-group-sm-responsive {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .btn-group-sm-responsive .btn {
+          width: 100%;
+        }
+      }
+      * {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+      .quran-font {
+        font-family: "Scheherazade New", serif;
+        line-height: 1.8;
+        font-size: 1.4rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="sidebarOverlay"
+      class="sidebar-overlay"
+      onclick="toggleSidebar(false)"
+    ></div>
+
+    <button
+      class="btn btn-dark rounded-circle mobile-toggle d-none"
+      style="
+        width: 60px;
+        height: 60px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      "
+      onclick="toggleSidebar(true)"
+    >
+      <i class="material-icons">menu</i>
+    </button>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div id="sidebar" class="col-lg-2 sidebar p-4 shadow">
+          <div class="text-center mb-5">
+            <i class="material-icons text-gold" style="font-size: 3.5rem"
+              >mosque</i
+            >
+            <h5 class="fw-bold mt-2">الذاكرين CMS</h5>
+            <div class="badge bg-gold text-dark px-3 py-2 mt-1">
+              الإصدار الاحترافي
+            </div>
+          </div>
+          <nav class="nav flex-column" id="nav-list"></nav>
+        </div>
+
+        <div class="col-lg-10 main-content">
+          <div class="action-bar mb-4 shadow-sm" id="main-action-bar">
+            <div class="d-flex align-items-center gap-3">
+              <div class="p-2 bg-light rounded-circle">
+                <i class="material-icons text-gold" id="view-icon">settings</i>
+              </div>
+              <h4 class="mb-0 fw-bold" id="view-title">إعدادات التطبيق</h4>
+            </div>
+            <div id="view-actions" class="d-flex gap-2"></div>
+          </div>
+
+          <div id="workspace"></div>
+
+          <div
+            class="card card-lux p-4 mt-5 border-top border-success border-4"
+          >
+            <div class="row align-items-center">
+              <div class="col-lg-8">
+                <h5 class="fw-bold">
+                  <i class="material-icons align-middle me-2">cloud_sync</i>
+                  مزامنة البيانات السحابية
+                </h5>
+                <p class="text-muted small mb-0">
+                  سيتم تحديث التطبيق وبناء نسخة APK جديدة فور الحفظ إلى مستودع
+                  GitHub.
+                </p>
+              </div>
+              <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <button
+                  class="btn btn-success btn-lg w-100 shadow"
+                  onclick="saveToGitHub()"
+                >
+                  <i class="material-icons align-middle">publish</i> حفظ وإرسال
+                  للتطبيق
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="helpModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: 20px">
+          <div class="modal-body p-4 text-center">
+            <h5 class="fw-bold mb-3">📄 صياغة ملف JSON للاستيراد</h5>
+            <p class="text-muted">
+              عند إضافة محتوى بالدفعة، يجب أن يكون الملف بالتنسيق التالي:
+            </p>
+            <pre
+              class="bg-light p-3 rounded text-start"
+              dir="ltr"
+              style="font-size: 0.8rem; overflow-x: auto"
+            >
+[
+  {
+    "title": "عنوان الموضوع",
+    "content": "نص الموضوع هنا..."
+  }
+]</pre
+            >
+            <p class="small text-danger">
+              تأكد من أن كل عنصر يحتوي على المفتاحين title و content فقط لضمان
+              التوافق.
+            </p>
+            <button class="btn btn-gold w-100 mt-3" data-bs-dismiss="modal">
+              فهمت ذلك
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="batchModal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: 20px">
+          <div class="modal-header bg-light border-0 px-4 pt-4">
+            <h5 class="fw-bold">لصق محتوى مجمع (JSON)</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-4">
+            <p class="small text-muted">
+              قم بلصق مصفوفة JSON تحتوي على المواضيع:
+            </p>
+            <textarea
+              id="batch-text"
+              class="form-control"
+              rows="12"
+              placeholder='[{"title": "...", "content": "..."}]'
+              style="font-family: monospace; font-size: 0.8rem"
+            ></textarea>
+          </div>
+          <div class="modal-footer border-0 p-4">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+              إلغاء
+            </button>
+            <button
+              type="button"
+              class="btn btn-gold px-4"
+              onclick="processBatchText()"
+            >
+              إضافة المجموعة
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="importModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: 20px">
+          <div class="modal-body p-5">
+            <div
+              class="upload-card"
+              onclick="document.getElementById('file-input').click()"
+            >
+              <i class="material-icons text-gold" style="font-size: 4rem"
+                >cloud_upload</i
+              >
+              <h5 class="mt-3 fw-bold">اسحب ملف JSON أو انقر للرفع</h5>
+              <p class="text-muted small">
+                يجب أن يكون الملف متوافقاً مع هيكلية التطبيق
+              </p>
+              <input
+                type="file"
+                id="file-input"
+                hidden
+                accept=".json"
+                onchange="handleFile(this.files)"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editModal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: 25px">
+          <div class="modal-body p-5">
+            <h4 class="fw-bold mb-4">تحرير المحتوى</h4>
+
+            <div class="row g-3 mb-4">
+              <div class="col-md-12">
+                <label class="small fw-bold mb-1"
+                  >القسم / التبويب المستهدف</label
+                >
+                <select
+                  id="m-target-key"
+                  class="form-select shadow-sm"
+                ></select>
+              </div>
+            </div>
+
+            <input
+              type="text"
+              id="m-title"
+              class="form-control form-control-lg mb-4 shadow-sm"
+              placeholder="العنوان..."
+            />
+            <textarea
+              id="m-content"
+              class="form-control shadow-sm"
+              rows="12"
+              placeholder="المحتوى الكامل هنا..."
+              style="white-space: pre-wrap; border-radius: 15px"
+            ></textarea>
+            <div class="mt-4 text-end">
+              <button class="btn btn-light px-4 me-2" data-bs-dismiss="modal">
+                إلغاء
+              </button>
+              <button class="btn btn-gold px-5 shadow" onclick="saveItem()">
+                حفظ التغييرات
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      let db = null;
+
+      function getListData(key) {
+        if (db.content && db.content[key]) return db.content[key];
+        if (db[key]) return db[key];
+        for (const rootKey of [
+          "fatawa_categories",
+          "dreams_categories",
+          "content",
+          "imam_ali"
+        ]) {
+          let parentArray = db[rootKey];
+          if (rootKey === "content" && db.content)
+            parentArray = db.content.imam_ali;
+          if (Array.isArray(parentArray)) {
+            const category = parentArray.find((c) => {
+              let catPrefix = "";
+              if (rootKey === "fatawa_categories") catPrefix = "fatawa_cat_";
+              if (rootKey === "dreams_categories") catPrefix = "dreams_cat_";
+              if (rootKey === "content" || rootKey === "imam_ali") catPrefix = "imam_ali_cat_";
+              return catPrefix + c.id === key;
+            });
+            if (category && category.items) return category.items;
+          }
+        }
+        return [];
+      }
+
+      function setListData(key, data) {
+        if (db.content && db.content[key]) {
+          db.content[key] = data;
+          return;
+        }
+        if (db[key]) {
+          db[key] = data;
+          return;
+        }
+        for (const rootKey of [
+          "fatawa_categories",
+          "dreams_categories",
+          "content",
+          "imam_ali"
+        ]) {
+          let parentArray = db[rootKey];
+          if (rootKey === "content" && db.content)
+            parentArray = db.content.imam_ali;
+          if (Array.isArray(parentArray)) {
+            const category = parentArray.find((c) => {
+              let catPrefix = "";
+              if (rootKey === "fatawa_categories") catPrefix = "fatawa_cat_";
+              if (rootKey === "dreams_categories") catPrefix = "dreams_cat_";
+              if (rootKey === "content" || rootKey === "imam_ali") catPrefix = "imam_ali_cat_";
+              return catPrefix + c.id === key;
+            });
+            if (category) {
+              category.items = data;
+              return;
+            }
+          }
+        }
+        if (!db.content) db.content = {};
+        db.content[key] = data;
+      }
+
+      let activeView = "settings";
+      let activeSubView = null;
+      let currentPage = 1;
+      const itemsPerPage = 50;
+      let editIdx = -1;
+
+      const subSections = {
+        duas: [
+          { id: "duas_days", title: "أدعية الأيام" },
+          { id: "duas_taqeebat", title: "تعقيبات الصلاة" },
+          { id: "duas_general", title: "الأدعية العامة" },
+          { id: "duas_salawat", title: "الصلوات" },
+        ],
+        visits: [
+          { id: "visits_days", title: "زيارات الأيام" },
+          { id: "visits_general", title: "الزيارات العامة" },
+        ],
+        adhkar: [
+          { id: "adhkar_munajat", title: "المناجاة" },
+          { id: "adhkar_tasbihs", title: "التسبيحات" },
+        ],
+      };
+
+      const modal = new bootstrap.Modal(document.getElementById("editModal"));
+      const importModal = new bootstrap.Modal(
+        document.getElementById("importModal"),
+      );
+      const helpModal = new bootstrap.Modal(
+        document.getElementById("helpModal"),
+      );
+      const batchModal = new bootstrap.Modal(
+        document.getElementById("batchModal"),
+      );
+
+      async function init() {
+        try {
+          const res = await fetch("../../assets/data/content.json");
+          db = await res.json();
+
+          const urlParams = new URLSearchParams(window.location.search);
+          const pView = urlParams.get('view') || 'settings';
+          const pSub = urlParams.get('sub');
+          currentPage = parseInt(urlParams.get('page')) || 1;
+
+
+          if (db.prophets_stories) {
+            db.content = db.content || {};
+            db.content.prophets_stories = db.prophets_stories;
+          }
+          renderNav();
+
+          // Populate imam_ali subSections dynamically
+          if (db.content && db.content.imam_ali) {
+            subSections["imam_ali"] = db.content.imam_ali.map((c) => ({
+              id: "imam_ali_cat_" + c.id,
+              title: c.title,
+            }));
+            // ensure content keys exist
+            db.content.imam_ali.forEach((c) => {
+              db.content["imam_ali_cat_" + c.id] = db.content["imam_ali_cat_" + c.id] || c.items || [];
+            });
+          }
+
+          // Populate fatawa subSections dynamically
+          if (db.fatawa_categories) {
+            subSections["fatawa"] = db.fatawa_categories.map((c) => ({
+              id: "fatawa_cat_" + c.id,
+              title: c.title,
+            }));
+
+            // also ensure these keys exist in db for editing
+            db.content = db.content || {};
+            db.fatawa_categories.forEach((c) => {
+              db.content["fatawa_cat_" + c.id] = db.content["fatawa_cat_" + c.id] || c.items || [];
+            });
+          }
+
+          if (db.dreams_categories) {
+            subSections["dreams"] = db.dreams_categories.map((c) => ({
+              id: "dreams_cat_" + c.id,
+              title: c.title,
+            }));
+            db.dreams_categories.forEach((c) => {
+              db.content["dreams_cat_" + c.id] = db.content["dreams_cat_" + c.id] || c.items || [];
+            });
+          }
+
+          loadView(pView, pSub, true);
+
+          window.addEventListener('popstate', (e) => {
+            if (e.state) {
+              currentPage = e.state.page || 1;
+              loadView(e.state.view, e.state.sub, true);
+            }
+          });
+        } catch (e) {
+          alert("خطأ في تحميل قاعدة البيانات.");
+        }
+      }
+
+      function renderNav() {
+        const list = document.getElementById("nav-list");
+        list.innerHTML = "";
+        const links = [
+          { id: "settings", title: "الهوية والوسائط", icon: "palette" },
+          {
+            id: "adhan_settings",
+            title: "إعدادات الأذان والتوقيت",
+            icon: "notifications_active",
+          },
+          { id: "about", title: "ملف المطور", icon: "person_pin" },
+          { id: "sections_manager", title: "إدارة الأقسام", icon: "category" },
+          {
+            id: "universal_batch",
+            title: "استيراد شامل بالدفعة",
+            icon: "dynamic_feed",
+          },
+          {
+            id: "hijri_calendar",
+            title: "التقويم الهجري",
+            icon: "event",
+          },
+          { divider: true },
+        ];
+        Object.keys(db.sections).forEach((k) =>
+          links.push({
+            id: k,
+            title: db.sections[k].title,
+            icon: db.sections[k].icon,
+          }),
+        );
+
+        links.forEach((l) => {
+          if (l.divider)
+            return (list.innerHTML +=
+              '<hr class="text-secondary opacity-25 my-3">');
+          list.innerHTML += `<a class="nav-link ${activeView === l.id ? "active" : ""}" onclick="loadView('${l.id}')">
+                    <i class="material-icons">${l.icon}</i> ${l.title}</a>`;
+        });
+      }
+
+      function loadView(id, subId = null, isPopState = false) {
+        activeView = id;
+        activeSubView = subId;
+        if (!isPopState) currentPage = 1;
+
+        // Auto-select first sub-section if not specified
+        if (!subId && subSections[id]) {
+          activeSubView = subSections[id][0].id;
+        }
+
+        if (!isPopState) {
+          const url = new URL(window.location);
+          url.searchParams.set('view', activeView);
+          if (activeSubView) url.searchParams.set('sub', activeSubView);
+          else url.searchParams.delete('sub');
+          url.searchParams.set('page', currentPage);
+          window.history.pushState({ view: activeView, sub: activeSubView, page: currentPage }, '', url);
+        }
+
+        if (db.prophets_stories) {
+          db.content = db.content || {};
+          db.content.prophets_stories = db.prophets_stories;
+        }
+        renderNav();
+
+        const ws = document.getElementById("workspace");
+        const acts = document.getElementById("view-actions");
+        const title = document.getElementById("view-title");
+        const icon = document.getElementById("view-icon");
+        ws.innerHTML = "";
+        acts.innerHTML = "";
+
+        if (db.sections[id]) {
+          const s = db.sections[id];
+          title.innerText = s.title;
+          icon.innerText = s.icon;
+
+          acts.innerHTML = `
+                    <div class="btn-group-sm-responsive">
+                        <button class="btn btn-outline-dark px-3" onclick="helpModal.show()">تعليمات الاستيراد</button>
+                        <button class="btn btn-outline-gold px-3" onclick="batchModal.show()">إضافة مجمعة (نص)</button>
+                        <button class="btn btn-outline-gold px-3" onclick="importModal.show()">رفع ملف JSON</button>
+                        <button class="btn btn-gold" onclick="openAdd()">إضافة موضوع</button>
+                    </div>
+                `;
+
+          // Render Sub-section Tabs if available
+          if (subSections[id]) {
+            let tabsHtml = `<div class="nav nav-pills mb-4 bg-white p-2 rounded shadow-sm">`;
+            subSections[id].forEach((sub) => {
+              tabsHtml += `
+                            <button class="nav-link py-2 px-4 me-2 ${activeSubView === sub.id ? "active" : "text-dark"}"
+                                    onclick="loadView('${id}', '${sub.id}')">${sub.title}</button>`;
+            });
+            tabsHtml += `</div>`;
+            ws.innerHTML += tabsHtml;
+          }
+
+          ws.innerHTML += `<div id="list-container" class="row g-3"></div>`;
+          renderItems();
+        } else if (id === "settings") {
+          title.innerText = "الهوية والوسائط";
+          icon.innerText = "photo_library";
+          setTimeout(renderGallery, 100);
+          ws.innerHTML = `
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card card-lux p-4 h-100">
+                                <h5 class="fw-bold mb-4">شعار التطبيق (Logo)</h5>
+                                <div class="upload-card mb-3" onclick="document.getElementById('logo-file').click()">
+                                    <img id="logo-prev" src="${db.settings.custom_logo_base64 || "../../assets/images/logo.png"}" class="img-preview mb-3" style="width:120px;height:120px">
+                                    <h6 class="fw-bold">انقر لاختيار صورة من الاستوديو</h6>
+                                    <input type="file" id="logo-file" hidden accept="image/*" onchange="processImg(this, 'logo')">
+                                </div>
+                                <button class="btn btn-outline-danger btn-sm" onclick="clearImg('logo')">استعادة الافتراضي</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card card-lux p-4 h-100">
+                                <h5 class="fw-bold mb-4">الخلفية الافتراضية (Background)</h5>
+                                <div class="upload-card mb-3" onclick="document.getElementById('bg-file').click()">
+                                    <img id="bg-prev" src="${db.settings.custom_bg_base64 || "../../assets/images/default_bg.png"}" class="img-preview mb-3" style="width:120px;height:120px">
+                                    <h6 class="fw-bold">انقر لاختيار خلفية من الاستوديو</h6>
+                                    <input type="file" id="bg-file" hidden accept="image/*" onchange="processImg(this, 'bg')">
+                                </div>
+                                <button class="btn btn-outline-danger btn-sm" onclick="clearImg('bg')">استعادة الافتراضي</button>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="card card-lux p-4">
+                                <h5 class="fw-bold mb-4">معرض الخلفيات (Background Gallery)</h5>
+                                <div class="d-flex overflow-auto pb-3 gap-3" id="bg-gallery-container" style="scrollbar-width: thin;">
+                                    </div>
+                                <div class="upload-card mt-3" onclick="document.getElementById('gallery-file').click()">
+                                    <i class="material-icons text-gold">add_photo_alternate</i>
+                                    <h6>أضف صورة إلى المعرض</h6>
+                                    <input type="file" id="gallery-file" hidden accept="image/*" onchange="processImg(this, 'gallery')">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+        } else if (id === "about") {
+          title.innerText = "معلومات المطور";
+          icon.innerText = "contact_support";
+          ws.innerHTML = `
+                    <div class="card card-lux p-4 mx-auto shadow-lg" style="max-width:900px;">
+                        <div class="row g-4">
+                            <div class="col-md-4 text-center">
+                                <div class="bg-light rounded-circle mb-3 d-inline-flex justify-content-center align-items-center border border-gold" style="width: 150px; height: 150px; overflow: hidden; position: relative;">
+                                    ${db.about.developer_image
+                                        ? `<img id="dev_img_preview" src="${db.about.developer_image}" style="width: 100%; height: 100%; object-fit: cover;">`
+                                        : `<i id="dev_icon_preview" class="material-icons text-gold" style="font-size:4rem">${db.about.developer_icon || 'person'}</i>`
+                                    }
+                                </div>
+                                <label class="fw-bold small d-block">صورة المطور (رابط أو Base64)</label>
+                                <input type="text" class="form-control text-center mb-2" id="dev_image_input" value="${db.about.developer_image || ''}" onchange="updateDevImage(this.value)" placeholder="رابط الصورة">
+                                <label class="btn btn-sm btn-outline-primary w-100 mb-2">
+                                    رفع صورة من الجهاز <input type="file" hidden accept="image/*" onchange="handleDevImageUpload(this)">
+                                </label>
+
+                                <label class="fw-bold small d-block mt-3">أو أيقونة (في حال عدم وجود صورة)</label>
+                                <input type="text" class="form-control text-center mb-3" value="${db.about.developer_icon || 'person'}" onchange="db.about.developer_icon=this.value; document.getElementById('dev_icon_preview') && (document.getElementById('dev_icon_preview').innerText = this.value)">
+                            </div>
+                            <div class="col-md-8">
+                                <label class="fw-bold small">اسم المطور</label>
+                                <input type="text" class="form-control mb-3" value="${db.about.developer_name || ''}" onchange="db.about.developer_name=this.value">
+                                <label class="fw-bold small">رابط الصفحة الرئيسية</label>
+                                <input type="text" class="form-control mb-3" value="${db.about.developer_page || ''}" onchange="db.about.developer_page=this.value">
+                                <label class="fw-bold small">عن التطبيق</label>
+                                <textarea class="form-control mb-3" rows="5" onchange="db.about.app_info=this.value">${db.about.app_info || ''}</textarea>
+
+                                <hr>
+                                <h6 class="fw-bold text-primary mb-3">مواقع التواصل الاجتماعي</h6>
+                                <div id="social_media_container">
+                                    ${renderSocialMediaInputs()}
+                                </div>
+                                <button class="btn btn-sm btn-outline-success mt-2" onclick="addSocialMedia()">+ إضافة رابط جديد</button>
+                            </div>
+                        </div>
+                    </div>
+`;
+        } else if (id === "adhan_settings") {
+          title.innerText = "إعدادات الأذان والتوقيت";
+          icon.innerText = "notifications_active";
+          if (!db.settings.adhan)
+            db.settings.adhan = {
+              ringtone: "adhan.mp3",
+              global_offset: 0,
+              adhan_base64: null,
+            };
+          ws.innerHTML = `
+                    <div class="card card-lux p-4 shadow-sm mb-4">
+                        <h6 class="fw-bold mb-4"><i class="material-icons align-middle me-2">volume_up</i> تخصيص نغمة الأذان</h6>
+                        <div class="upload-card" onclick="document.getElementById('adhan-file').click()">
+                            <i class="material-icons text-gold" style="font-size:3rem">audiotrack</i>
+                            <h6>${db.settings.adhan.adhan_base64 ? "تم رفع ملف صوتي مخصص" : "انقر لرفع ملف الأذان (MP3)"}</h6>
+                            <input type="file" id="adhan-file" hidden accept="audio/*" onchange="processAdhanAudio(this)">
+                        </div>
+                        <div class="mt-3 text-center">
+                            <label class="small fw-bold mb-2">إزاحة التوقيت الكلية (بالدقائق)</label>
+                            <input type="number" class="form-control text-center mx-auto" style="max-width:100px" value="${db.settings.adhan.global_offset}" onchange="db.settings.adhan.global_offset=parseInt(this.value)">
+                        </div>
+                    </div>
+
+                    <div class="card card-lux p-4 shadow-sm">
+                        <h6 class="fw-bold mb-3">جدولة الأوقات يدوياً (اختياري)</h6>
+                        <p class="small text-muted">أضف أوقات محددة لتاريخ معين لتجاوز الحسابات التلقائية.</p>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-2"><input type="date" id="man-date" class="form-control"></div>
+                            <div class="col"><input type="text" id="man-fajr" class="form-control" placeholder="الفجر (05:30)"></div>
+                            <div class="col"><input type="text" id="man-dhuhr" class="form-control" placeholder="الظهر"></div>
+                            <div class="col"><input type="text" id="man-asr" class="form-control" placeholder="العصر"></div>
+                            <div class="col"><input type="text" id="man-magh" class="form-control" placeholder="المغرب"></div>
+                            <div class="col"><input type="text" id="man-isha" class="form-control" placeholder="العشاء"></div>
+                            <div class="col-md-2"><button class="btn btn-gold w-100" onclick="addManualSchedule()">إضافة</button></div>
+                        </div>
+                        <div id="manual-schedules-list"></div>
+                    </div>
+                `;
+          renderManualSchedules();
+        } else if (id === "sections_manager") {
+          title.innerText = "إدارة الأقسام";
+          icon.innerText = "category";
+          ws.innerHTML = `
+                    <div class="card card-lux p-4 shadow-sm mb-4">
+                        <h6 class="fw-bold mb-3">إضافة قسم جديد</h6>
+                        <div class="row g-3">
+                            <div class="col-md-3"><input type="text" id="new-sec-id" class="form-control" placeholder="ID (e.g. news)"></div>
+                            <div class="col-md-3"><input type="text" id="new-sec-title" class="form-control" placeholder="اسم القسم"></div>
+                            <div class="col-md-3"><input type="text" id="new-sec-icon" class="form-control" placeholder="أيقونة Material"></div>
+                            <div class="col-md-3"><button class="btn btn-gold w-100" onclick="addNewSection()">إنشاء القسم</button></div>
+                        </div>
+                    </div>
+                    <div id="sections-list" class="row g-3"></div>
+                `;
+          renderSectionsList();
+        } else if (id === "hijri_calendar") {
+          title.innerText = "التقويم الهجري";
+          icon.innerText = "event";
+          ws.innerHTML = `
+                    <div class="card card-lux p-4 shadow-sm">
+                        <h6 class="fw-bold mb-3 text-primary">إدارة بيانات التقويم الهجري</h6>
+                        <p class="small text-muted">ألصق مصفوفة JSON التي تحتوي على بيانات التقويم الهجري هنا.</p>
+                        <textarea id="hijri-cal-text" class="form-control mb-3" rows="15" placeholder='ألصق كود JSON هنا...' style="font-family:monospace; font-size:0.8rem;" dir="ltr">${db.hijri_calendar ? JSON.stringify(db.hijri_calendar, null, 2) : ''}</textarea>
+                        <button class="btn btn-gold w-100 fw-bold" onclick="saveHijriCalendar()">حفظ بيانات التقويم الهجري</button>
+                    </div>
+                `;
+        } else if (id === "universal_batch") {
+          title.innerText = "استيراد شامل لكل الأقسام";
+          icon.innerText = "dynamic_feed";
+          ws.innerHTML = `
+                    <div class="card card-lux p-4 shadow-sm">
+                        <h6 class="fw-bold mb-3 text-primary">إضافة محتوى لعدة أقسام في وقت واحد</h6>
+                        <p class="small text-muted">استخدم التنسيق التالي للصق البيانات. سيقوم النظام تلقائياً بتوزيع كل موضوع على قسمه الصحيح.</p>
+                        <pre class="bg-dark text-light p-3 rounded" dir="ltr" style="font-size:0.75rem">
+[
+  {
+    "section": "duas",
+    "title": "دعاء كميل",
+    "content": "نص الدعاء هنا..."
+  },
+  {
+    "section": "quran",
+    "title": "سورة الفاتحة",
+    "content": "نص السورة..."
+  }
+]</pre>
+                        <textarea id="u-batch-text" class="form-control mb-3" rows="10" placeholder='ألصق كود JSON هنا...' style="font-family:monospace; font-size:0.8rem;"></textarea>
+                        <button class="btn btn-primary btn-lg w-100" onclick="processUniversalBatch()">توزيع الإضافات على الأقسام</button>
+                    </div>
+                `;
+        }
+        if (window.innerWidth < 992) toggleSidebar(false);
+      }
+
+      function renderItems() {
+        let container = document.getElementById("list-container");
+        if (!container) return;
+        container.innerHTML = "";
+
+        const contentKey = activeSubView || activeView;
+        let items = getListData(contentKey) || [];
+        const isQuran = contentKey === "quran";
+
+        const totalItems = items.length;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+
+        const startIdx = (currentPage - 1) * itemsPerPage;
+        const endIdx = Math.min(startIdx + itemsPerPage, totalItems);
+        const paginatedItems = items.slice(startIdx, endIdx);
+
+        paginatedItems.forEach((it, localIndex) => {
+          const globalIndex = startIdx + localIndex;
+          container.innerHTML += `
+                    <div class="col-md-6">
+                        <div class="card card-lux p-3 d-flex flex-row justify-content-between align-items-center">
+                            <div class="text-truncate" style="max-width:70%">
+                                <span class="badge bg-gold text-dark me-2">#${globalIndex + 1}</span>
+                                <span class="fw-bold text-dark ${isQuran ? "quran-font" : ""}">${isQuran && !it.title.startsWith("سورة") ? "سورة " : ""}${it.title || 'بدون عنوان'}</span>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="openEdit(${globalIndex})"><i class="material-icons small">edit</i></button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${globalIndex})"><i class="material-icons small">delete</i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+        });
+
+        // Render Pagination UI
+        let paginationContainer = document.getElementById("pagination-container");
+        if (!paginationContainer) {
+            paginationContainer = document.createElement("div");
+            paginationContainer.id = "pagination-container";
+            paginationContainer.className = "col-12 mt-4 d-flex justify-content-center gap-2 align-items-center";
+            container.parentElement.appendChild(paginationContainer);
+        }
+
+        if (totalPages > 1) {
+            paginationContainer.innerHTML = `
+                <button class="btn btn-outline-gold px-3" ${currentPage === 1 ? "disabled" : ""} onclick="changePage(${currentPage - 1})">السابق</button>
+                <span class="fw-bold px-3 py-2 bg-light rounded shadow-sm">صفحة ${currentPage} من ${totalPages}</span>
+                <button class="btn btn-outline-gold px-3" ${currentPage === totalPages ? "disabled" : ""} onclick="changePage(${currentPage + 1})">التالي</button>
+            `;
+        } else {
+            paginationContainer.innerHTML = "";
+        }
+      }
+
+      function changePage(newPage) {
+          currentPage = newPage;
+          const url = new URL(window.location);
+          url.searchParams.set('page', currentPage);
+          window.history.pushState({ view: activeView, sub: activeSubView, page: currentPage }, '', url);
+          renderItems();
+      }
+
+      function toggleSidebar(show) {
+        const s = document.getElementById("sidebar");
+        const o = document.getElementById("sidebarOverlay");
+        if (show) {
+          s.classList.add("show");
+          o.classList.add("show");
+        } else {
+          s.classList.remove("show");
+          o.classList.remove("show");
+        }
+      }
+
+      function handleFile(files) {
+        if (!files.length) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result);
+            if (Array.isArray(data)) {
+              const contentKey = activeSubView || activeView;
+              let currentList = getListData(contentKey) || [];
+              currentList = [...currentList, ...data];
+              setListData(contentKey, currentList);
+              renderItems();
+              importModal.hide();
+              alert("تم استيراد " + data.length + " عنصر بنجاح.");
+            } else alert("يجب أن يكون الملف عبارة عن Array [{},{}]");
+          } catch (err) {
+            alert("خطأ في قراءة ملف JSON");
+          }
+        };
+        reader.readAsText(files[0]);
+      }
+
+      function processBatchText() {
+        const txt = document.getElementById("batch-text").value.trim();
+        if (!txt) return;
+        try {
+          const data = JSON.parse(txt);
+          const contentKey = activeSubView || activeView;
+          if (Array.isArray(data)) {
+            let currentList = getListData(contentKey) || [];
+            currentList = [...currentList, ...data];
+            setListData(contentKey, currentList);
+            renderItems();
+            batchModal.hide();
+            alert("تم إضافة " + data.length + " عنصر بنجاح.");
+          } else alert("يجب أن يكون النص عبارة عن مصفوفة Array [{},{}]");
+        } catch (e) {
+          alert("خطأ في تنسيق JSON: " + e.message);
+        }
+      }
+
+      window.saveHijriCalendar = function() {
+        const text = document.getElementById("hijri-cal-text").value.trim();
+        if (!text) {
+          db.hijri_calendar = null;
+          alert("تم مسح بيانات التقويم الهجري.");
+          return;
+        }
+        try {
+          const parsed = JSON.parse(text);
+          if (!Array.isArray(parsed)) {
+            alert("خطأ: يجب أن يكون المحتوى مصفوفة JSON [ ]");
+            return;
+          }
+          db.hijri_calendar = parsed;
+          alert("تم حفظ بيانات التقويم الهجري في الذاكرة بنجاح! لا تنسَ الضغط على 'نشر التحديثات'.");
+        } catch (e) {
+          alert("خطأ في تنسيق JSON: " + e.message);
+        }
+      };
+
+      function processUniversalBatch() {
+        const txt = document.getElementById("u-batch-text").value.trim();
+        if (!txt) return;
+        try {
+          const data = JSON.parse(txt);
+          if (!Array.isArray(data)) return alert("يجب أن يكون مصفوفة JSON");
+
+          let count = 0;
+          data.forEach((item) => {
+            const sec = item.section;
+            let list = getListData(sec) || [];
+            list.push({
+              id: Date.now() + Math.random(),
+              title: item.title,
+              content: item.content,
+            });
+            setListData(sec, list);
+            count++;
+          });
+          alert("تم استيراد وتوزيع " + count + " عنصر بنجاح.");
+          document.getElementById("u-batch-text").value = "";
+        } catch (e) {
+          alert("خطأ JSON: " + e.message);
+        }
+      }
+
+      function processImg(input, type) {
+        if (!input.files.length) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const base64 = e.target.result;
+          if (type === "logo") {
+            db.settings.custom_logo_base64 = base64;
+            document.getElementById("logo-prev").src = base64;
+          }
+          if (type === "bg") {
+            db.settings.custom_bg_base64 = base64;
+            document.getElementById("bg-prev").src = base64;
+          }
+          if (type === "gallery") {
+            if (!db.settings.bg_gallery) db.settings.bg_gallery = [];
+            db.settings.bg_gallery.push(base64);
+            renderGallery();
+          }
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+
+      function renderGallery() {
+        const container = document.getElementById("bg-gallery-container");
+        if (!container) return;
+        container.innerHTML = "";
+        (db.settings.bg_gallery || []).forEach((img, i) => {
+          container.innerHTML += `
+                    <div class="position-relative" style="min-width:120px">
+                        <img src="${img}" class="img-preview" style="width:120px;height:120px">
+                        <button class="btn btn-danger btn-sm position-absolute top-0 end-0 rounded-circle m-1" onclick="deleteFromGallery(${i})">
+                            <i class="material-icons" style="font-size:12px">close</i>
+                        </button>
+                    </div>
+                `;
+        });
+      }
+
+      function deleteFromGallery(i) {
+        db.settings.bg_gallery.splice(i, 1);
+        renderGallery();
+      }
+
+      function renderSectionsList() {
+        const list = document.getElementById("sections-list");
+        if (!list) return;
+        list.innerHTML = "";
+        Object.keys(db.sections).forEach((k) => {
+          list.innerHTML += `
+                    <div class="col-md-6">
+                        <div class="card card-lux p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div><i class="material-icons align-middle me-2">${db.sections[k].icon}</i> <b>${db.sections[k].title}</b></div>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="openRenameSection('${k}')"><i class="material-icons small">edit</i></button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSection('${k}')"><i class="material-icons small">delete</i></button>
+                                </div>
+                            </div>
+                            <div class="small text-muted">ID: ${k} | العناصر: ${db.content[k] ? db.content[k].length : 0}</div>
+                        </div>
+                    </div>`;
+        });
+      }
+
+      function openRenameSection(k) {
+        const newTitle = prompt(
+          "أدخل الاسم الجديد للقسم:",
+          db.sections[k].title,
+        );
+        if (newTitle && newTitle !== db.sections[k].title) {
+          db.sections[k].title = newTitle;
+
+          if (db.prophets_stories) {
+            db.content = db.content || {};
+            db.content.prophets_stories = db.prophets_stories;
+          }
+          renderNav();
+          renderSectionsList();
+        }
+      }
+
+      function addNewSection() {
+        const id = document.getElementById("new-sec-id").value.trim();
+        const title = document.getElementById("new-sec-title").value.trim();
+        const icon = document.getElementById("new-sec-icon").value.trim();
+        if (!id || !title) return alert("املاً البيانات");
+        db.sections[id] = {
+          title,
+          icon,
+          color: "0xFFD4AF37",
+          visible_home: true,
+        };
+        if (!db.content[id]) db.content[id] = [];
+
+        if (db.prophets_stories) {
+          db.content = db.content || {};
+          db.content.prophets_stories = db.prophets_stories;
+        }
+        renderNav();
+        renderSectionsList();
+      }
+
+      function deleteSection(k) {
+        if (confirm("حذف القسم ومحتوياته نهائياً؟")) {
+          delete db.sections[k];
+          delete db.content[k];
+          if (db.prophets_stories) {
+            db.content = db.content || {};
+            db.content.prophets_stories = db.prophets_stories;
+          }
+          renderNav();
+          renderSectionsList();
+        }
+      }
+
+      function renderDailyDuasList() {
+        const list = document.getElementById("daily-duas-list");
+        if (!list) return;
+        list.innerHTML =
+          '<h6 class="fw-bold col-12 mb-3">الأدعية المضافة حالياً:</h6>';
+        const daysMap = {
+          Friday: "الجمعة",
+          Saturday: "السبت",
+          Sunday: "الأحد",
+          Monday: "الاثنين",
+          Tuesday: "الثلاثاء",
+          Wednesday: "الأربعاء",
+          Thursday: "الخميس",
+        };
+        Object.keys(db.daily_duas || {}).forEach((day) => {
+          list.innerHTML += `
+                    <div class="col-md-6">
+                        <div class="card card-lux p-3 d-flex flex-row justify-content-between align-items-center">
+                            <div class="text-truncate">
+                                <span class="badge bg-gold text-dark me-2">${daysMap[day] || day}</span>
+                                <span class="fw-bold text-dark">${db.daily_duas[day].title}</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteDailyDua('${day}')"><i class="material-icons small">delete</i></button>
+                        </div>
+                    </div>`;
+        });
+      }
+
+      function saveDailyDua() {
+        const day = document.getElementById("dua-day").value;
+        const title = document.getElementById("dua-title").value;
+        const content = document.getElementById("dua-content").value;
+        if (!title || !content) return alert("املاً البيانات");
+        db.daily_duas[day] = { title, content };
+        renderDailyDuasList();
+      }
+
+      function deleteDailyDua(day) {
+        delete db.daily_duas[day];
+        renderDailyDuasList();
+      }
+
+      function processAdhanAudio(input) {
+        if (!input.files.length) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          db.settings.adhan.adhan_base64 = e.target.result;
+          alert("تم تحميل ملف الأذان. سيتم دمجه في النسخة القادمة.");
+          loadView("adhan_settings");
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+
+      function renderManualSchedules() {
+        const list = document.getElementById("manual-schedules-list");
+        if (!list) return;
+        if (!db.settings.adhan.manual_schedules)
+          db.settings.adhan.manual_schedules = [];
+        list.innerHTML = "";
+        db.settings.adhan.manual_schedules.forEach((s, i) => {
+          list.innerHTML += `<div class="alert alert-secondary d-flex justify-content-between py-2 small">
+                    <span><b>${s.date}:</b> ف ${s.fajr} | ظ ${s.dhuhr} | ع ${s.asr} | م ${s.maghrib} | ع ${s.isha}</span>
+                    <button class="btn btn-sm text-danger" onclick="db.settings.adhan.manual_schedules.splice(${i},1);renderManualSchedules();">حذف</button>
+                </div>`;
+        });
+      }
+
+      function addManualSchedule() {
+        const date = document.getElementById("man-date").value;
+        const fajr = document.getElementById("man-fajr").value;
+        const dhuhr = document.getElementById("man-dhuhr").value;
+        const asr = document.getElementById("man-asr").value;
+        const magh = document.getElementById("man-magh").value;
+        const isha = document.getElementById("man-isha").value;
+        if (!date || !fajr) return alert("حدد التاريخ والوقت");
+        db.settings.adhan.manual_schedules.push({
+          date,
+          fajr,
+          dhuhr,
+          asr,
+          maghrib: magh,
+          isha,
+        });
+        renderManualSchedules();
+      }
+
+      function clearImg(type) {
+        if (type === "logo") {
+          db.settings.custom_logo_base64 = null;
+          document.getElementById("logo-prev").src =
+            "../../assets/images/logo.png";
+        }
+        if (type === "bg") {
+          db.settings.custom_bg_base64 = null;
+          document.getElementById("bg-prev").src =
+            "../../assets/images/default_bg.png";
+        }
+      }
+
+      function populateTargetKey() {
+        const select = document.getElementById("m-target-key");
+        if (!select) return;
+        select.innerHTML = "";
+        Object.keys(db.sections).forEach((k) => {
+          if (subSections[k]) {
+            subSections[k].forEach((sub) => {
+              select.innerHTML += `<option value="${sub.id}">${db.sections[k].title} - ${sub.title}</option>`;
+            });
+          } else {
+            select.innerHTML += `<option value="${k}">${db.sections[k].title}</option>`;
+          }
+        });
+      }
+
+      function openAdd() {
+        openEdit(-1);
+      }
+      function openEdit(i) {
+        editIdx = i;
+        const contentKey = activeSubView || activeView;
+        populateTargetKey();
+        document.getElementById("m-target-key").value = contentKey;
+
+        const listData = getListData(contentKey);
+        const it =
+          i === -1
+            ? { title: "", content: "" }
+            : listData
+              ? listData[i]
+              : { title: "", content: "" };
+        document.getElementById("m-title").value = it.title;
+        document.getElementById("m-content").value = it.content;
+
+        const contentArea = document.getElementById("m-content");
+        const titleArea = document.getElementById("m-title");
+        if (contentKey === "quran") {
+          contentArea.classList.add("quran-font");
+          titleArea.classList.add("quran-font");
+        } else {
+          contentArea.classList.remove("quran-font");
+          titleArea.classList.remove("quran-font");
+        }
+        modal.show();
+      }
+      function saveItem() {
+        const t = document.getElementById("m-title").value;
+        const c = document.getElementById("m-content").value;
+        const targetKey = document.getElementById("m-target-key").value;
+        const currentKey = activeSubView || activeView;
+
+        if (!t || !c) return alert("املاً الحقول");
+
+        let targetList = getListData(targetKey) || [];
+
+        if (editIdx === -1) {
+          targetList.push({ id: Date.now(), title: t, content: c });
+          setListData(targetKey, targetList);
+        } else {
+          let currentList = getListData(currentKey) || [];
+          if (targetKey === currentKey) {
+            currentList[editIdx].title = t;
+            currentList[editIdx].content = c;
+            setListData(currentKey, currentList);
+          } else {
+            currentList.splice(editIdx, 1);
+            setListData(currentKey, currentList);
+            targetList.push({
+              id: Date.now(),
+              title: t,
+              content: c,
+            });
+            setListData(targetKey, targetList);
+          }
+        }
+        modal.hide();
+        renderItems();
+      }
+      function deleteItem(i) {
+        const contentKey = activeSubView || activeView;
+        if (confirm("حذف؟")) {
+          let list = getListData(contentKey);
+          if (list) {
+            list.splice(i, 1);
+            setListData(contentKey, list);
+          }
+          renderItems();
+        }
+      }
+
+            async function fetchWithRetry(url, options, maxRetries = 3) {
+        let retries = 0;
+        let baseDelay = 1000;
+
+        while (retries <= maxRetries) {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 120000); // 120-second timeout
+
+          try {
+            const res = await fetch(url, { ...options, signal: controller.signal });
+            clearTimeout(timeoutId);
+
+            // Monitor X-RateLimit-Remaining
+            const rateLimitRemaining = res.headers.get('X-RateLimit-Remaining');
+            if (rateLimitRemaining !== null && parseInt(rateLimitRemaining) < 10) {
+              console.warn(`تحذير: طلبات GitHub المتبقية قليلة جداً (${rateLimitRemaining})`);
+              // Could alert here if needed
+            }
+
+            if (!res.ok) {
+              const errData = await res.json().catch(() => ({}));
+              throw new Error(`HTTP Error ${res.status}: ${errData.message || res.statusText}`);
+            }
+            return res;
+          } catch (err) {
+            clearTimeout(timeoutId);
+            if (retries === maxRetries) {
+              throw err;
+            }
+            retries++;
+            console.warn(`Fetch failed (${err.message}), retrying ${retries}/${maxRetries}...`);
+            await new Promise(resolve => setTimeout(resolve, baseDelay * Math.pow(2, retries - 1)));
+          }
+        }
+      }
+
+      async function saveToGitHub(onProgress = console.log) {
+        // Note: 25MB monolithic JSON is an anti-pattern. Consider sharding into smaller logical files in the future.
+        const token = prompt("أدخل GitHub Personal Access Token:");
+        if (!token) return;
+
+        const branch = "main";
+        const owner = "techtouchAI";
+        const repo = "Islamic";
+        const filePath = "assets/data/content.json";
+
+        const headers = {
+          "Authorization": `token ${token}`,
+          "Accept": "application/vnd.github.v3+json",
+          "Content-Type": "application/json"
+        };
+
+        try {
+          // Progress Callback / Alert
+          const reportProgress = onProgress;
+
+          reportProgress("Step 1/5: Fetching current data...");
+
+          // 1. The Fetch (Bypass 1MB Limit using raw URL)
+          const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}?t=${Date.now()}`;
+          const getResponse = await fetchWithRetry(rawUrl, { method: "GET" });
+          const latestDB = await getResponse.json();
+
+          reportProgress("Step 1.5: Merging local updates...");
+          // Merge Data Logic
+          function deepMergeCategories(latestArr, localArr) {
+            if (!latestArr) return localArr;
+            if (!localArr) return latestArr;
+            const merged = [...latestArr];
+            localArr.forEach(localCat => {
+              const existingIdx = merged.findIndex(c => c.id === localCat.id);
+              if (existingIdx !== -1) {
+                if (localCat.items) {
+                    merged[existingIdx].items = localCat.items;
+                }
+                merged[existingIdx].title = localCat.title || merged[existingIdx].title;
+              } else {
+                merged.push(localCat);
+              }
+            });
+            return merged;
+          }
+
+          if (db.fatawa_categories) {
+            db.fatawa_categories.forEach(c => {
+              if (db.content && db.content["fatawa_cat_" + c.id]) {
+                c.items = db.content["fatawa_cat_" + c.id];
+              }
+            });
+          }
+          if (db.dreams_categories) {
+            db.dreams_categories.forEach(c => {
+              if (db.content && db.content["dreams_cat_" + c.id]) {
+                c.items = db.content["dreams_cat_" + c.id];
+              }
+            });
+          }
+          if (db.content && db.content.imam_ali) {
+            db.content.imam_ali.forEach(c => {
+              if (db.content["imam_ali_cat_" + c.id]) {
+                c.items = db.content["imam_ali_cat_" + c.id];
+              }
+            });
+          }
+
+          latestDB.sections = { ...(latestDB.sections || {}), ...(db.sections || {}) };
+          latestDB.settings = { ...(latestDB.settings || {}), ...(db.settings || {}) };
+          latestDB.about = { ...(latestDB.about || {}), ...(db.about || {}) };
+
+          if (db.content) {
+             latestDB.content = latestDB.content || {};
+             Object.keys(db.content).forEach(k => {
+                 if (k !== 'imam_ali' && k !== 'prophets_stories' && !k.startsWith('fatawa_cat_') && !k.startsWith('dreams_cat_') && !k.startsWith('imam_ali_cat_')) {
+                     latestDB.content[k] = db.content[k];
+                 }
+             });
+          }
+
+          if (db.fatawa_categories) {
+              latestDB.fatawa_categories = deepMergeCategories(latestDB.fatawa_categories, db.fatawa_categories);
+          }
+          if (db.dreams_categories) {
+              latestDB.dreams_categories = deepMergeCategories(latestDB.dreams_categories, db.dreams_categories);
+          }
+          if (db.content && db.content.imam_ali && latestDB.content) {
+              latestDB.content.imam_ali = deepMergeCategories(latestDB.content.imam_ali, db.content.imam_ali);
+          }
+          if (db.prophets_stories || (db.content && db.content.prophets_stories)) {
+              latestDB.prophets_stories = db.prophets_stories || db.content.prophets_stories;
+          }
+          if (db.daily_duas) {
+              latestDB.daily_duas = { ...(latestDB.daily_duas || {}), ...(db.daily_duas || {}) };
+          }
+
+          if (db.hijri_calendar) {
+              latestDB.hijri_calendar = db.hijri_calendar;
+          }
+
+          // 2. The Push (Git Database API)
+          reportProgress("Step 2/5: Creating blob...");
+
+          // Step A (Get Reference)
+          const refUrl = `https://api.github.com/repos/${owner}/${repo}/git/refs/heads/${branch}`;
+          const refRes = await fetchWithRetry(refUrl, { headers });
+          const refData = await refRes.json();
+          const initialCommitSha = refData.object.sha;
+
+          // Step B (Create Blob)
+          let mergedJsonString = JSON.stringify(latestDB, null, 2);
+
+          let blobSha;
+          try {
+            const blobUrl = `https://api.github.com/repos/${owner}/${repo}/git/blobs`;
+            const blobRes = await fetchWithRetry(blobUrl, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ content: mergedJsonString, encoding: "utf-8" })
+            });
+            const blobData = await blobRes.json();
+            blobSha = blobData.sha;
+          } catch (e) {
+             alert("Error in Step B: Failed to create Blob - " + e.message);
+             return;
+          }
+
+          // Force garbage collection of the 25MB string
+          mergedJsonString = null;
+
+          reportProgress("Step 3/5: Creating tree...");
+          // Step C (Create Tree)
+          let treeSha;
+          try {
+            const treeUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees`;
+            const treeRes = await fetchWithRetry(treeUrl, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({
+                base_tree: initialCommitSha,
+                tree: [
+                  {
+                    path: filePath,
+                    mode: "100644",
+                    type: "blob",
+                    sha: blobSha
+                  }
+                ]
+              })
+            });
+            const treeData = await treeRes.json();
+            treeSha = treeData.sha;
+          } catch (e) {
+            alert("Error in Step C: Failed to create Tree - " + e.message);
+            return;
+          }
+
+          reportProgress("Step 4/5: Creating commit...");
+          // Step D (Create Commit)
+          let newCommitSha;
+          try {
+             const commitUrl = `https://api.github.com/repos/${owner}/${repo}/git/commits`;
+             const commitRes = await fetchWithRetry(commitUrl, {
+               method: "POST",
+               headers,
+               body: JSON.stringify({
+                 message: "تحديث المحتوى من لوحة التحكم (Git DB API)",
+                 tree: treeSha,
+                 parents: [initialCommitSha]
+               })
+             });
+             const commitData = await commitRes.json();
+             newCommitSha = commitData.sha;
+          } catch (e) {
+             alert("Error in Step D: Failed to create Commit - " + e.message);
+             return;
+          }
+
+          reportProgress("Step 5/5: Updating reference...");
+          // Step E (Update Ref)
+          try {
+             // Pre-check for concurrent modification
+             const verifyRefRes = await fetchWithRetry(refUrl, { headers });
+             const verifyRefData = await verifyRefRes.json();
+             if (verifyRefData.object.sha !== initialCommitSha) {
+                alert("Conflict Detected: Another user saved changes. Please refresh and try again.");
+                return;
+             }
+
+             const updateRefRes = await fetchWithRetry(refUrl, {
+               method: "PATCH",
+               headers,
+               body: JSON.stringify({
+                 sha: newCommitSha,
+                 force: false
+               })
+             });
+             if (updateRefRes.ok) {
+                alert("تم الحفظ في GitHub بنجاح!");
+             } else {
+                throw new Error("Update Ref failed");
+             }
+          } catch (e) {
+             alert("Error in Step E: Failed to update Ref - " + e.message);
+             return;
+          }
+
+        } catch (error) {
+          alert("Error: Fetching Raw JSON failed or other error - " + error.message);
+        }
+      }
+
+      init();
+
+      window.updateDevImage = function(val) {
+          db.about.developer_image = val;
+          loadView('about');
+      };
+
+      window.handleDevImageUpload = function(input) {
+          if (input.files && input.files[0]) {
+              var reader = new FileReader();
+              reader.onload = function(e) {
+                  db.about.developer_image = e.target.result;
+                  loadView('about');
+              }
+              reader.readAsDataURL(input.files[0]);
+          }
+      };
+
+      window.renderSocialMediaInputs = function() {
+          if (!db.about.social_media) db.about.social_media = [];
+          return db.about.social_media.map((s, idx) => `
+              <div class="row g-2 mb-2 align-items-center">
+                  <div class="col-3">
+                      <select class="form-select form-select-sm" onchange="db.about.social_media[${idx}].icon = this.value">
+                          <option value="facebook" ${s.icon === 'facebook' ? 'selected' : ''}>Facebook</option>
+                          <option value="twitter" ${s.icon === 'twitter' || s.icon === 'x' ? 'selected' : ''}>Twitter / X</option>
+                          <option value="instagram" ${s.icon === 'instagram' ? 'selected' : ''}>Instagram</option>
+                          <option value="youtube" ${s.icon === 'youtube' ? 'selected' : ''}>YouTube</option>
+                          <option value="tiktok" ${s.icon === 'tiktok' ? 'selected' : ''}>TikTok</option>
+                          <option value="telegram" ${s.icon === 'telegram' ? 'selected' : ''}>Telegram</option>
+                          <option value="whatsapp" ${s.icon === 'whatsapp' ? 'selected' : ''}>WhatsApp</option>
+                          <option value="snapchat" ${s.icon === 'snapchat' ? 'selected' : ''}>Snapchat</option>
+                          <option value="linkedin" ${s.icon === 'linkedin' ? 'selected' : ''}>LinkedIn</option>
+                          <option value="github" ${s.icon === 'github' ? 'selected' : ''}>GitHub</option>
+                          <option value="link" ${s.icon === 'link' ? 'selected' : ''}>أخرى</option>
+                      </select>
+                  </div>
+                  <div class="col-8">
+                      <input type="text" class="form-control form-control-sm" placeholder="الرابط" value="${s.url || ''}" onchange="db.about.social_media[${idx}].url = this.value">
+                  </div>
+                  <div class="col-1 text-center">
+                      <button class="btn btn-sm btn-outline-danger p-1" onclick="removeSocialMedia(${idx})"><i class="material-icons" style="font-size: 1rem;">delete</i></button>
+                  </div>
+              </div>
+          `).join('');
+      };
+
+      window.addSocialMedia = function() {
+          if (!db.about.social_media) db.about.social_media = [];
+          db.about.social_media.push({ icon: 'facebook', url: '' });
+          loadView('about');
+      };
+
+      window.removeSocialMedia = function(idx) {
+          db.about.social_media.splice(idx, 1);
+          loadView('about');
+      };
+</script>
+  </body>
+</html>

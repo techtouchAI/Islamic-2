@@ -1,0 +1,10 @@
+--- lib/ui/settings/settings_section.dart
++++ lib/ui/settings/settings_section.dart
+@@ -25,10 +25,8 @@
+ import '../../ui/calendar/hijri_calendar_screen.dart';
+ import '../../ui/qibla/qibla_screen.dart';
+ import '../../presentation/screens/istikhara_screen.dart';
+ import '../../main.dart'; // For AlDhakereenApp globals
+-import 'dart:convert';
+-import 'dart:io';
+ import 'package:path_provider/path_provider.dart';
